@@ -1,6 +1,8 @@
 import sys
 import socket
 
+# Dieser Code ist komplett Scheisse. Wow.
+
 version = '0.0.1'
 usage = 'usage: ' + sys.argv[0] + ' connect|syn host port [portrange]'
 
