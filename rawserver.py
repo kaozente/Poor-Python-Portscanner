@@ -5,11 +5,16 @@ on a specified port (defaults to 1337)
 
 import socket
 import sys
-import struct
+
+from psIpPacket import psIpPacket
+from psTcpPacket import psTcpPacket
 
 # so und nicht anders
 host = '127.0.0.1'
 port = 1337
+
+#print(sys.version_info)
+
 
 try:
 	# socket creation: 
@@ -22,19 +27,44 @@ try:
 	srv.bind((host, port))
 	#srv.listen(1)
 
-except socket.error as (errno, errmsg):
-	print "Error while creating socket:"
-	print errmsg + " (" + str(errno) + ")"
+#except socket.error as (errno, errmsg):
+except socket.error as errmsg:
+	print ("Error while creating socket:")
+	print (errmsg)
+	#+ " (" + str(errno) + ")"
 	sys.exit()
 
-print "weeeeeeeeeeeeeeey running!"
+print ("weeeeeeeeeeeeeeey running!")
 print (srv.getsockname())
 
-str = srv.recv(128)
-print "Received:"
-print (str)
-print "Hexdump:"
-print (struct.unpack(str))
+try:
+	data = srv.recv(128)
+	print ("Received:")
+	print (data)
+	print (list(data))
+
+	# Analyze IP Header
+	ip_data = data[0:20]
+	pck = psIpPacket()
+	pck.loadValuesFromRaw(ip_data)
+	pck.printList()
+
+	# Is it TCP?
+	if pck.proto == 6:
+		print ("It's TCP yeah!")
+		tcp_data = data[20:39]
+		print(list(tcp_data))
+		tcppck = psTcpPacket()
+		tcppck.loadValuesFromRaw(tcp_data)
+		tcppck.printList()
+
+
+	#print ("Hexdump:")
+	#print (struct.unpack(str))
+except KeyboardInterrupt:
+	print ("Exit by KeyboardInterrupt")
+
+print ("Exit 0")
 
 '''
 clisock, (remhost, remport) = srv.accept()
