@@ -9,6 +9,7 @@ import sys
 from psIpPacket import psIpPacket
 from psTcpPacket import psTcpPacket
 
+
 # so und nicht anders
 host = '127.0.0.1'
 port = 1337
@@ -65,6 +66,9 @@ except KeyboardInterrupt:
 	print ("Exit by KeyboardInterrupt")
 
 print ("Exit 0")
+
+
+
 
 '''
 clisock, (remhost, remport) = srv.accept()

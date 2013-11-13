@@ -12,20 +12,23 @@ class psIpPacket:
 
 	def loadValuesFromRaw(self, data):
 
+		## for some reason, win 8 needs to have the recv-bytestream manually 
+		## converted using ord(). win 7 worked without...
+
 		self.data = data
 
 		# field 1 (Version / Header Lenght as VVVVIIII)
-		self.ipVersion = self.data[0] >> 4
-		self.ipIHL = self.data[0] & 0b00001111
+		self.ipVersion = ord(self.data[0]) >> 4
+		self.ipIHL = ord(self.data[0]) & 0b00001111
 
 		#field 2 (DSSP / ECN as DDDDDDEE)
 		# ignore
 
 		#field 3/4 (Packet Length)
-		self.PLength = (self.data[2] << 8) + self.data[3]
+		self.PLength = (ord(self.data[2]) << 8) + ord(self.data[3])
 
 		#field 5/6 (Packet ID)
-		self.PID = (self.data[4] << 8) + self.data[5]
+		self.PID = (ord(self.data[4]) << 8) + (ord(self.data[5]))
 
 		#field 7 (Flags R/MF/DF / Fragment Offset)
 		# ignore
@@ -34,28 +37,28 @@ class psIpPacket:
 		# ignore
 
 		#field 9 (Protocol; TCP == 6))
-		self.proto = (self.data[9])
+		self.proto = (ord(self.data[9]))
 
 		#field10/11 (Header Checksum)
-		self.checksum = (self.data[10] << 8) + self.data[11]
+		self.checksum = (ord(self.data[10]) << 8) + ord(self.data[11])
 
 		#field12-15 (Source IP Addr)
-		self.src  = str(self.data[12])
+		self.src  = str(ord(self.data[12]))
 		self.src += "."
-		self.src += str(self.data[13])
+		self.src += str(ord(self.data[13]))
 		self.src += "."
-		self.src += str(self.data[14])
+		self.src += str(ord(self.data[14]))
 		self.src += "."
-		self.src += str(self.data[15])
+		self.src += str(ord(self.data[15]))
 
 		#field16-19 (Dest. IP Addr)
-		self.dst  = str(self.data[16])
+		self.dst  = str(ord(self.data[16]))
 		self.dst += "."
-		self.dst += str(self.data[17])
+		self.dst += str(ord(self.data[17]))
 		self.dst += "."
-		self.dst += str(self.data[18])
+		self.dst += str(ord(self.data[18]))
 		self.dst += "."
-		self.dst += str(self.data[19])
+		self.dst += str(ord(self.data[19]))
 
 
 
