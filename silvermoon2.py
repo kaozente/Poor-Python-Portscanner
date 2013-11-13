@@ -49,8 +49,7 @@ ip_tot_len = 0  # kernel will fill the correct total length
 ip_id = 54321   #Id of this packet
 ip_frag_off = 0
 ip_ttl = 255
-ip_proto = 6
-#ip_proto = socket.IPPROTO_TCP
+ip_proto = socket.IPPROTO_TCP
 ip_check = 0    # kernel will fill the correct checksum
 ip_saddr = socket.inet_aton ( source_ip )   #Spoof the source ip address if you want to
 ip_daddr = socket.inet_aton ( dest_ip )
@@ -61,8 +60,8 @@ ip_ihl_ver = (ip_ver << 4) + ip_ihl
 ip_header = pack('!BBHHHBBH4s4s' , ip_ihl_ver, ip_tos, ip_tot_len, ip_id, ip_frag_off, ip_ttl, ip_proto, ip_check, ip_saddr, ip_daddr)
  
 # tcp header fields
-tcp_source = 55555   # source port
-tcp_dest = 1337   # destination port
+tcp_source = 1234   # source port
+tcp_dest = 80   # destination port
 tcp_seq = 454
 tcp_ack_seq = 0
 tcp_doff = 5    #4 bit field, size of tcp header, 5 * 4 = 20 bytes
@@ -104,8 +103,5 @@ tcp_header = pack('!HHLLBBH' , tcp_source, tcp_dest, tcp_seq, tcp_ack_seq, tcp_o
 # final full packet - syn packets dont have any data
 packet = ip_header + tcp_header + user_data
  
-
-
 #Send the packet finally - the port specified has no effect
-for i in range(20):
-    s.sendto(packet, (dest_ip , 0 ))    # put this in a loop if you want to flood the target
+s.sendto(packet, (dest_ip , 0 ))    # put this in a loop if you want to flood the target

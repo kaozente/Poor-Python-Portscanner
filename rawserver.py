@@ -11,7 +11,7 @@ from psTcpPacket import psTcpPacket
 
 
 # so und nicht anders
-host = '127.0.0.1'
+host = '0.0.0.0'
 port = 1337
 
 #print(sys.version_info)
@@ -23,9 +23,10 @@ try:
 	# SOCK_RAW --> Raw socket
 	# IPPROTO_IP --> Scan on TCP basis
 	srv = socket.socket(socket.AF_INET, socket.SOCK_RAW, 0)
+	srv.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
 
 	# Bind to 0.0.0.0 (all avaiblable IPs) and listen (max 1 connection)
-	srv.bind((host, port))
+	srv.bind((host, 0))
 	#srv.listen(1)
 
 #except socket.error as (errno, errmsg):
@@ -39,25 +40,25 @@ print ("weeeeeeeeeeeeeeey running!")
 print (srv.getsockname())
 
 try:
-	data = srv.recv(128)
-	print ("Received:")
-	print (data)
-	print (list(data))
+	while 1:
+		data = srv.recv(4096)
+		print ("Received:")
+		#print (data)
+		#print (list(data))
 
-	# Analyze IP Header
-	ip_data = data[0:20]
-	pck = psIpPacket()
-	pck.loadValuesFromRaw(ip_data)
-	pck.printList()
+		# Analyze IP Header
+		ip_data = data[0:20]
+		pck = psIpPacket()
+		pck.loadValuesFromRaw(ip_data)
+		pck.printList()
 
-	# Is it TCP?
-	if pck.proto == 6:
-		print ("It's TCP yeah!")
-		tcp_data = data[20:39]
-		print(list(tcp_data))
-		tcppck = psTcpPacket()
-		tcppck.loadValuesFromRaw(tcp_data)
-		tcppck.printList()
+		# Is it TCP?
+		if pck.proto == 6:
+			tcp_data = data[20:39]
+			print(list(tcp_data))
+			tcppck = psTcpPacket()
+			tcppck.loadValuesFromRaw(tcp_data)
+			tcppck.printList()
 
 
 	#print ("Hexdump:")
